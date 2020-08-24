@@ -9,6 +9,8 @@
 
 //renderer
 #include "poppingamer/renderer/renderer.hpp"
+#include "poppingamer/renderer/renderable.hpp"
+#include "poppingamer/renderer/camera.hpp"
 
 //app
 #include "poppingamer/application.hpp"
