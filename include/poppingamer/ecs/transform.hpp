@@ -6,15 +6,14 @@
 namespace pg {
   class Transform : public Component {
   public:
-    sf::Vector2<float> position;
+    sf::Vector2f position;
     float angle; //in degrees, 0 means no rotation
 
   public:
     Transform();
     ~Transform();
 
-
-    void Translate(sf::Vector2<float> offset);
+    void Translate(sf::Vector2f offset);
     void Rotate(float degree); //+ rotates clockwise
 
   };

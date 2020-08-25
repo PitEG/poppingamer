@@ -5,7 +5,6 @@
 #include "poppingamer/ecs/entity.hpp"
 #include "poppingamer/ecs/scene.hpp"
 #include "poppingamer/ecs/transform.hpp"
-#include "poppingamer/ecs/componentsystem.hpp"
 
 //renderer
 #include "poppingamer/renderer/renderer.hpp"

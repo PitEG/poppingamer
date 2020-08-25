@@ -6,10 +6,13 @@ namespace pg {
   class Entity;
 
   class Component {
-  protected:
-    Component();
+  private:
+    Entity* m_entity;
+    bool    m_active;
 
-    virtual ~Component();
+  protected:
+    Component(Entity* owner) {}
+    ~Component() {}
 
     /* GAME LOGIC
      * this is flow of how components are run
@@ -22,13 +25,9 @@ namespace pg {
 
     virtual void OnDisable() {}   //when component is disabled
 
-    void SetActive(bool active);
+    inline void SetActive(bool active) { m_active = active; OnDisable(); }
 
     inline const bool GetActive() const { return m_active; }
     inline const Entity* GetEntity() const { return m_entity; }
-
-  private:
-    Entity* m_entity;
-    bool m_active;
   };
 }
