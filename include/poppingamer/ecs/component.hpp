@@ -7,7 +7,7 @@ namespace pg {
 
   class Component {
   private:
-    Entity* m_entity;
+    Entity* m_entity; //CHANGE TO ID
     bool    m_active;
 
   protected:

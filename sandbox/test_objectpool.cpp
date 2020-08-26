@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <typeinfo>
 
 int main() {
   int fire_count = 30;
@@ -38,6 +39,16 @@ int main() {
   for (int i = 0; i < gets; i++) {
     std::cout << op.GetEntity("projectiles")->Name() << std::endl;
   }
+
+  class A {};
+  class B : public A {};
+
+  std::cout << "testing typeid" << std::endl;
+  std::cout << (typeid(A) == typeid(B)) << std::endl;
+  A a;
+  B b;
+  A& bA = b;
+  std::cout << (typeid(a) == typeid(bA)) << std::endl;
   
   delete fires;
   return 0;

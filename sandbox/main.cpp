@@ -63,6 +63,7 @@ public:
     sf::Int64 frametime = 1'000'000 / framerate;
     sf::Int64 lastFrameTime = clock.getElapsedTime().asMicroseconds();
     while (m_window->isOpen()) {
+      if (m_window->hasFocus()) {
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         m_window->close();
       }
@@ -77,6 +78,7 @@ public:
       }
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
         rdr.rs.move(0.f,1.f);
+      }
       }
 
       //Render

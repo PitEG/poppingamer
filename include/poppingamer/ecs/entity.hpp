@@ -26,6 +26,7 @@ namespace pg {
     std::string             m_name;
     bool                    m_active;
     std::vector<Component*> m_components;
+    //TODO maybe change this to an unsigned int id
 
   };
 }
