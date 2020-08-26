@@ -10,14 +10,14 @@ namespace pg {
 
   class Scene {
   public:
-    Scene();
+    Scene(std::string name = std::string("scene"));
     ~Scene();
 
     inline const std::string& Name() const { return m_name; }
     inline const std::vector<Entity*>& GetEntities() const { return m_entities; }
 
   private:
-    std::string m_name;
-    std::vector<Entity*> m_entities;
+    std::string           m_name;
+    std::vector<Entity*>  m_entities;
   };
 }

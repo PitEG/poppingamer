@@ -5,9 +5,16 @@ set(RNDR_SRC
     ${RNDR}/sprite.cpp
    )
 
+set(ECS_SRC
+    ecs/entity.cpp
+    ecs/scene.cpp
+    ecs/objectpooler.cpp
+   )
+
 set(SRC
     poppingamer.cpp
     ${RNDR_SRC}
+    ${ECS_SRC}
    )
 
 add_library(poppingamer SHARED ${SRC})

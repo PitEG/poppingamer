@@ -4,6 +4,7 @@
 #include "poppingamer/ecs/component.hpp"
 #include "poppingamer/ecs/entity.hpp"
 #include "poppingamer/ecs/scene.hpp"
+#include "poppingamer/ecs/objectpooler.hpp"
 #include "poppingamer/ecs/transform.hpp"
 
 //renderer

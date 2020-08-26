@@ -8,16 +8,13 @@
 class RDR : public pg::Renderable {
 public:
   RDR() : RDR(1) {}
-
   RDR(unsigned int layer) 
   : pg::Renderable(layer), rs(sf::Vector2f(10,10)){
   }
-
   virtual void Draw(const pg::Camera& camera) {
     sf::RenderTexture* rt = camera.m_rTexture;
     rt->draw(rs);
   }
-
   sf::RectangleShape rs;
 };
 
@@ -29,7 +26,6 @@ public:
 
   virtual void Start() override {
   }
-
   virtual void WindowResize() override {
   }
 
@@ -63,7 +59,7 @@ public:
     m_window->setVerticalSyncEnabled(false);
     unsigned int frame = 0;
     sf::Clock clock;
-    sf::Int64 framerate = 60;
+    sf::Int64 framerate = 120;
     sf::Int64 frametime = 1'000'000 / framerate;
     sf::Int64 lastFrameTime = clock.getElapsedTime().asMicroseconds();
     while (m_window->isOpen()) {
