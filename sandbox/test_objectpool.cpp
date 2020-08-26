@@ -17,18 +17,26 @@ int main() {
   }
   std::vector<pg::Entity*>* players = new std::vector<pg::Entity*>();
   for (int i = 0; i < player_count; i++) {
-    players->push_back(new pg::Entity(NULL));
     players->push_back(new pg::Entity(NULL,std::to_string(i)));
   }
   
   pg::ObjectPooler op;
   op.AddPool(*fires, std::string("fire"));
-  op.AddPool(*projectiles, std::string("proejctiles"));
-  op.AddPool(*players, std::string("players"));
+  op.AddPool(*projectiles, std::string("projectiles"));
+  op.AddPool(*players, std::string("player"));
 
   int gets = 100;
+  std::cout << "getting fire" << std::endl;
   for (int i = 0; i < gets; i++) {
     std::cout << op.GetEntity("fire")->Name() << std::endl;
+  }
+  std::cout << "getting player" << std::endl;
+  for (int i = 0; i < gets; i++) {
+    std::cout << op.GetEntity("player")->Name() << std::endl;
+  }
+  std::cout << "getting projectiles" << std::endl;
+  for (int i = 0; i < gets; i++) {
+    std::cout << op.GetEntity("projectiles")->Name() << std::endl;
   }
   
   delete fires;

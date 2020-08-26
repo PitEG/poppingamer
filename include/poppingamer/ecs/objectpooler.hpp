@@ -7,6 +7,8 @@
 #include "poppingamer/ecs/entity.hpp"
 
 namespace pg {
+  class Entity; 
+
   class ObjectPooler {
   private:
     struct Pool; //pool declaration
@@ -17,6 +19,11 @@ namespace pg {
     ~ObjectPooler();
 
     bool AddPool(const std::vector<Entity*>& entities, const std::string& identifier); 
+    /*
+     * Returns the entity from its pool by the identifier string. If the
+     * pool does not exist (ie: the identifier is not mapped to a pool),
+     * it returns NULL.
+     */
     Entity* GetEntity(std::string name); 
 
   //START POOL
@@ -35,7 +42,7 @@ namespace pg {
       }
 
     private:
-      unsigned int          m_nextIdx;
+      unsigned int          m_nextIdx = 0;
       std::vector<Entity*>  m_entities;
       std::string           m_name; //identifier
     }; //END POOL

@@ -8,3 +8,5 @@
 
 #include <typeinfo>
 #include <filesystem>
+
+#include <exception>
