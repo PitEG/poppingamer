@@ -1,6 +1,7 @@
 #pragma once
 
 //entity-component system
+#include "poppingamer/ecs/updatetypes.hpp"
 #include "poppingamer/ecs/component.hpp"
 #include "poppingamer/ecs/componentmanager.hpp"
 #include "poppingamer/ecs/transform.hpp"

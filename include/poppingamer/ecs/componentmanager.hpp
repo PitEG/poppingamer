@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "poppingamer/ecs/component.hpp"
+#include "poppingamer/ecs/updatetypes.hpp"
 
 namespace pg {
   class ComponentManager {
@@ -19,22 +20,21 @@ namespace pg {
      */
     ComponentManager() {}
     //copy constructor
-    ComponentManager(ComponentManager* cm_target, void (*copy)(ComponentManager*, ComponentManager*)) {
-      copy(cm_target, this); 
-    }
-
     /*
-    ComponentManager(ComponentManager& cm) {
-      //iterate over every element in cm
-         auto itr = cm.m_components.begin();
-         while( itr != cm.m_components.end()) {
-         std::vector<Component>* originalCompList = 
-         cm.m_components[itr->first];
-         std::vector<Component>* newCompList = 
-         new std::vector<Component>(*originalCompList);
-         m_components[itr->first] = newCompList;
-         itr++;
-      }
+     * I couldn't figure out a better way. The user must provide a copy
+     * constructor with all the different types of compnents.
+     * I'll provide an example below it.
+     */
+    ComponentManager(ComponentManager* cm_src, 
+        void (*copy)(const ComponentManager* src, ComponentManager* target)) {
+      copy(cm_src, this); 
+    }
+    /*
+    void copyConstructor(pg::ComponentManager* src, pg::ComponentManager* target) {
+      std::vector<cTransform>* copiedList = 
+        new std::vector<cTransform>(src->CopyComponentList<cTransform>());
+      auto list = src->CopyComponentList<cTransform>();
+      target->AddComponents<cTransform>(list);
     }
     */
 
@@ -61,19 +61,23 @@ namespace pg {
 
     //GET A COPY OF A COMPONENT LIST 
     template<class T>
-    std::vector<T> CopyComponentList() {
-      auto itr = m_components.find(typeid(T));
+    std::vector<T> CopyComponentList() const {
+      auto const itr = m_components.find(typeid(T));
       if (itr == m_components.end()) {
         return std::vector<T>();
       }
-      //std::vector<T> cList = *((std::vector<T>*)itr->second);
-      auto cList = (std::vector<T>*)(m_components[typeid(T)]);
+      //auto cList = (std::vector<T>*)(m_components[typeid(T)]);
+      std::vector<T>* cList = (std::vector<T>*)itr->second;
       return *cList;
     }
 
-    //TICK COMPONENT
+    //TICK COMPONENT LIST
+    /*
+     * update the components. Return false if component type T doesn't
+     * exist in this manager
+     */
     template<class T>
-    bool Tick() {
+    bool Update(UpdateType updateType) {
       auto itr = m_components.find(typeid(T));
       if (itr == m_components.end()) {
         return false;
@@ -81,9 +85,21 @@ namespace pg {
       std::vector<Component>* compList = m_components[typeid(T)];
       for (int i = 0; i < compList->size(); i++) {
         Component& c = (*compList)[i];
-        c.OnTick();
+        switch(updateType) {
+          /*
+           * To exapnd this, add an enumeration to updatetypes.hpp,
+           * modify component.hpp for another virtual update function,
+           * and add another case here.
+           */
+          case(UpdateType::Start)   : c.OnStart(); break;
+          case(UpdateType::Tick)    : c.OnTick(); break;
+          case(UpdateType::Render)  : c.OnRender(); break;
+          case(UpdateType::Enable)  : c.OnEnable(); break;
+          case(UpdateType::Disable) : c.OnDisable(); break;
+        }
       }
       return true;
     }
+
   };
 }

@@ -18,7 +18,7 @@ public:
 class FakeComponent : public pg::Component {
 };
 
-void copyConstructor(pg::ComponentManager* src, pg::ComponentManager* target) {
+void copyConstructor(const pg::ComponentManager* src, pg::ComponentManager* target) {
   std::vector<cTransform>* copiedList = 
     new std::vector<cTransform>(src->CopyComponentList<cTransform>());
   auto list = src->CopyComponentList<cTransform>();
@@ -32,11 +32,11 @@ int main() {
   cout << "Add() and Tick() tests\n";
   cm.AddComponents<cTransform>(tL);
   cm.AddComponents<cTransform>(tL);
-  cm.Tick<cTransform>();
+  cm.Update<cTransform>(pg::UpdateType::Tick);
 
   cout << "copy constructor tests\n";
   pg::ComponentManager cm2(&cm, copyConstructor);
-  cm2.Tick<cTransform>();
+  cm2.Update<cTransform>(pg::UpdateType::Tick);
 
   return 0;
 }

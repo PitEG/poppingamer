@@ -17,6 +17,11 @@ namespace pg {
 
   public:
     ObjectPooler();
+    /*
+     * TODO Copy Constructor
+     */
+    ObjectPooler(ObjectPooler& op) {
+    }
     ~ObjectPooler();
 
     bool AddPool(const std::vector<Entity*>& entities, const std::string& identifier); 

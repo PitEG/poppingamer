@@ -5,6 +5,7 @@
 #include <string>
 
 #include "poppingamer/ecs/component.hpp"
+#include "poppingamer/ecs/componentmanager.hpp"
 #include "poppingamer/ecs/entity.hpp"
 #include "poppingamer/ecs/objectpooler.hpp"
 
@@ -12,9 +13,10 @@ namespace pg {
   class Scene {
   private:
     std::string         m_name;
-    std::vector<Entity> m_entities;
 
-    ObjectPooler        m_objectPooler;
+    std::vector<Entity> m_entities;
+    ObjectPooler*       m_objectPooler;
+    ComponentManager*   m_componentManager;
 
   public:
     /*
@@ -33,7 +35,7 @@ namespace pg {
      */
     inline const std::string& Name() const { return m_name; }
     inline const std::vector<Entity>& GetEntities() const { return m_entities; }
-    inline ObjectPooler& GetObjectPooler() { return m_objectPooler; }
+    inline ObjectPooler* GetObjectPooler() { return m_objectPooler; }
 
     /*
      * Creates a pool of this entity.
