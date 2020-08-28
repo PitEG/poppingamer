@@ -7,6 +7,7 @@
 #include <cmath> 
 
 #include <typeinfo>
+#include <typeindex>
 #include <filesystem>
 
 #include <exception>

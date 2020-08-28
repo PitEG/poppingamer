@@ -12,6 +12,7 @@ namespace pg {
   class ObjectPooler {
   private:
     struct Pool; //pool declaration
+
     std::unordered_map<std::string, Pool*> m_pools;
 
   public:

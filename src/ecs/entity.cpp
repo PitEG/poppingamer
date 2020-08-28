@@ -5,7 +5,7 @@ namespace pg {
       Scene* scene, 
       std::string name, 
       bool active, 
-      const std::vector<Component*>& components) 
+      const std::vector<unsigned int>& components) 
   : m_scene(scene), m_name(name), m_active(active), m_components(components) {
   }
 

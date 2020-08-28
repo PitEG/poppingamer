@@ -1,18 +1,15 @@
 #pragma once  
 
-#include "poppingamer/ecs/entity.hpp"
-
 namespace pg {
-  class Entity;
-
   class Component {
   private:
-    Entity* m_entity; //CHANGE TO ID
-    bool    m_active;
+    unsigned int  m_entityId;
+    bool          m_active;
 
-  protected:
-    Component(Entity* owner) {}
-    ~Component() {}
+  public:
+    Component(unsigned int entity, bool active = true) 
+      : m_entityId(entity), m_active(active) {}
+    virtual ~Component() {}
 
     /* GAME LOGIC
      * this is flow of how components are run
@@ -25,9 +22,12 @@ namespace pg {
 
     virtual void OnDisable() {}   //when component is disabled
 
+    /*
+     * Methods
+     */
     inline void SetActive(bool active) { m_active = active; OnDisable(); }
 
     inline const bool GetActive() const { return m_active; }
-    inline const Entity* GetEntity() const { return m_entity; }
+    inline const unsigned int GetEntity() const { return m_entityId; }
   };
 }

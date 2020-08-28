@@ -9,6 +9,7 @@ set(ECS_SRC
     ecs/entity.cpp
     ecs/scene.cpp
     ecs/objectpooler.cpp
+# ecs/componentmanager.cpp
    )
 
 set(SRC

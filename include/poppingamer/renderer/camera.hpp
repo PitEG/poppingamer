@@ -23,7 +23,6 @@ namespace pg {
      * scale:     scalar
      */
     Camera(
-        Entity* entity = NULL, 
         sf::View view = sf::View(sf::Vector2f(0,0), sf::Vector2f(100.f,100.f)),
         sf::RenderTexture* rt = NULL,
         unsigned int scale = 1);
