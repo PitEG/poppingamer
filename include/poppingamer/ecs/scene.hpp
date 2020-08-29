@@ -10,6 +10,7 @@
 namespace pg {
   class Scene {
   private:
+    std::string           m_name = "scene";
     std::vector<Entity>   m_entities;
     ObjectPooler          m_objectPooler;
     /*
@@ -21,6 +22,7 @@ namespace pg {
     virtual ~Scene();
 
     unsigned int CreateEntity();
+    //this probably should be declared in derived scenes
     template<typename T>
     void AddComponent(unsigned int entity, T t);
 
@@ -36,8 +38,10 @@ namespace pg {
    * EXAMPLE SCENE
    *
    */
+  /*
   class ExampleScene : public Scene {
   private:
+     //COMPONENTS
     struct Transform {
       float x;
       float y;
@@ -52,6 +56,7 @@ namespace pg {
     ComponentManager<Transform> c_transforms;
 
   private:
+  //SYSTEMS
     void CameraSystem(ComponentManager<Camera>& cameras, ComponentManager<Transform>& transforms) {
       std::vector<unsigned int> entities = cameras.GetEntities();
       for (int i = 0; i < entities.size(); i++) {
@@ -65,23 +70,16 @@ namespace pg {
 
   public:
 
+    //UPDATES
     void OnTick() {
       CameraSystem(c_cameras, c_transforms);
     }
 
+    //not necessarily the same as OnTick(). I just don't want to write another example system
     void OnRender() {
-      //should be something else I guess
       CameraSystem(c_cameras, c_transforms);
     }
   };
+*/
+
 }
-
-
-
-
-
-
-
-
-
-
