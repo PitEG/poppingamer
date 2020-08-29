@@ -1,14 +1,11 @@
 set(RNDR renderer)
 set(RNDR_SRC
-#${RNDR}/renderer.cpp
-#${RNDR}/camera.cpp
-#    ${RNDR}/sprite.cpp
+    ${RNDR}/renderer.cpp
    )
 
 set(ECS_SRC
    ecs/scene.cpp
    ecs/objectpooler.cpp
-#ecs/componentmanager.cpp
    )
 
 set(SRC

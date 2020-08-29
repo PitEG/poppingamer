@@ -7,7 +7,6 @@
 namespace pg {
   struct Camera {
     sf::View            m_view;
-    sf::RenderTexture*  m_rTexture; //framebuffer to draw to
     unsigned int        m_scale;
   };
 
