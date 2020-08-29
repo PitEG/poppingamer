@@ -7,9 +7,14 @@ namespace pg {
     bool          m_active;
 
   public:
+    Component() : Component(-1, false) {}
     Component(unsigned int entity, bool active = true) 
       : m_entityId(entity), m_active(active) {}
-    virtual ~Component() {}
+    Component(const Component& src) {
+      m_entityId = src.m_entityId;
+      m_active = src.m_active;
+    }
+    virtual ~Component() {} 
 
     /* GAME LOGIC
      * this is flow of how components are run
@@ -30,4 +35,4 @@ namespace pg {
     inline const bool GetActive() const { return m_active; }
     inline const unsigned int GetEntity() const { return m_entityId; }
   };
-}
+} 

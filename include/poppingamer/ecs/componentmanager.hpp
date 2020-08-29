@@ -22,7 +22,7 @@ namespace pg {
     //copy constructor
     /*
      * I couldn't figure out a better way. The user must provide a copy
-     * constructor with all the different types of compnents.
+     * constructor with all the different types of components.
      * I'll provide an example below it.
      */
     ComponentManager(ComponentManager* cm_src, 
@@ -82,9 +82,9 @@ namespace pg {
       if (itr == m_components.end()) {
         return false;
       }
-      std::vector<Component>* compList = m_components[typeid(T)];
+      std::vector<T>* compList = (std::vector<T>*)m_components[typeid(T)];
       for (int i = 0; i < compList->size(); i++) {
-        Component& c = (*compList)[i];
+        T& c = (*compList)[i];
         switch(updateType) {
           /*
            * To exapnd this, add an enumeration to updatetypes.hpp,

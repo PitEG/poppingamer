@@ -6,6 +6,9 @@ using std::cout;
 using std::endl;
 
 class cTransform : public pg::Component {
+private:
+  int positionx;
+  int positiony;
 public:
   cTransform() : pg::Component(1) {
   }
@@ -16,6 +19,13 @@ public:
 };
 
 class FakeComponent : public pg::Component {
+private:
+  char a = 'a';
+
+public:
+  virtual void OnTick() override {
+    cout << "FakeComponent\n";
+  }
 };
 
 void copyConstructor(const pg::ComponentManager* src, pg::ComponentManager* target) {
@@ -28,6 +38,7 @@ void copyConstructor(const pg::ComponentManager* src, pg::ComponentManager* targ
 int main() {
   pg::ComponentManager cm;
   cTransform t;
+  FakeComponent f;
   std::vector<cTransform> tL({t});
   cout << "Add() and Tick() tests\n";
   cm.AddComponents<cTransform>(tL);
