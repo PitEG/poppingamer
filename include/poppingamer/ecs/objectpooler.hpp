@@ -11,17 +11,18 @@ namespace pg {
   private:
     struct Pool {
     private:
-      std::string         m_name; //identifier
-      std::vector<Entity> m_entities;
+      std::string               m_name; //identifier
+      std::vector<unsigned int> m_entities; //using entity id
 
       unsigned int        m_nextIdx = 0;
 
     public:
-      Pool(std::string identifier, const std::vector<Entity>& entities);
+      Pool() {}
+      Pool(const std::string identifier, const std::vector<Entity>& entities);
 
-      inline const std::vector<Entity>& GetEntities() const { return m_entities; }
-      inline const Entity GetNext() { 
-        Entity& returnEntity = m_entities[m_nextIdx++]; 
+      inline const std::vector<unsigned int>& GetEntities() const { return m_entities; }
+      inline const unsigned int GetNext() { 
+        unsigned int returnEntity = m_entities[m_nextIdx++]; 
         if (m_nextIdx >= m_entities.size()) {
           m_nextIdx = 0;
         }
@@ -43,6 +44,6 @@ namespace pg {
      * pool does not exist (ie: the identifier is not mapped to a pool),
      * it returns NULL.
      */
-    Entity* GetEntity(std::string name); 
+    unsigned int GetEntity(std::string name); 
   };
 }

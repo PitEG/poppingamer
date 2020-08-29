@@ -18,10 +18,10 @@
 #include "poppingamer/ecs/componentmanager.hpp"
 
 //renderer
+#include "poppingamer/renderer/camera.hpp"
 /*
 #include "poppingamer/renderer/renderable.hpp"
 #include "poppingamer/renderer/renderer.hpp"
-#include "poppingamer/renderer/camera.hpp"
 
 //app
 #include "poppingamer/application.hpp"

@@ -6,26 +6,15 @@
 
 namespace pg {
   class Entity {
+
   private:
-    unsigned int m_id;
-    std::string  m_name;
-    std::unordered_map<std::type_index, unsigned int> m_components;
+    unsigned int  m_id;
+    std::string   m_name;
+    bool          m_active;
 
   public:
-    Entity(const unsigned int id, 
-        const std::string name, 
-        std::vector<unsigned int> m_components);
-    Entity(const Entity& entity);
-
-    template<typename T>
-    bool GetComponent(T& c) { 
-      auto itr = m_components.find(typeid(T));
-      if (itr == m_components.end()) {
-        return false;
-      }
-      c = m_components[typeid(T)];
-      return true;
-    }
+    Entity(const unsigned int id = -1, const std::string name = "entity");
+    Entity(const Entity& entity); //copy constructor
 
     inline const std::string& GetName() const { return m_name; }
     inline const unsigned int GetID() const { return m_id; }

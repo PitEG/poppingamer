@@ -7,6 +7,7 @@ set(RNDR_SRC
 
 set(ECS_SRC
    ecs/scene.cpp
+   ecs/objectpooler.cpp
    )
 
 set(SRC
