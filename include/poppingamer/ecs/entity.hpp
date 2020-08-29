@@ -1,41 +1,33 @@
 #pragma once 
 
+#include <string>
 #include <vector>
+#include <typeinfo>
 
-namespace pg { 
-  class Scene;
-
-  class Entity { 
+namespace pg {
+  class Entity {
   private:
-    Scene*                     m_scene;
-    std::string                m_name;
-    unsigned int               m_id;
-    bool                       m_active;
-    std::vector<unsigned int>  m_components;
+    unsigned int m_id;
+    std::string  m_name;
+    std::unordered_map<std::type_index, unsigned int> m_components;
 
   public:
-    /*
-     * CONSTRUCTORS
-     */
-    Entity(Scene* scene, std::string name = "entity", bool active = true, const std::vector<unsigned int>& components = std::vector<unsigned int>()); 
-    //copy constructor
-    Entity(const Entity& entity, Scene* newScene = NULL);
-    ~Entity();
+    Entity(const unsigned int id, 
+        const std::string name, 
+        std::vector<unsigned int> m_components);
+    Entity(const Entity& entity);
 
-    /*
-     * GETTERS
-     */
-    inline const std::string& Name() const { return m_name; }
-    inline const unsigned int ID() const { return m_id; }
-    inline const Scene* GetScene() const { return m_scene; }
-    inline const std::vector<unsigned int>& GetComponents() const { return m_components; }
-    inline const bool GetActive() const { return m_active; }
+    template<typename T>
+    bool GetComponent(T& c) { 
+      auto itr = m_components.find(typeid(T));
+      if (itr == m_components.end()) {
+        return false;
+      }
+      c = m_components[typeid(T)];
+      return true;
+    }
 
-    /*
-     * SETTERS
-     */
-    inline void SetComponents(std::vector<unsigned int> componentIds) { m_components = componentIds; }
-    inline void SetActive(bool active) { m_active = active; } 
-
+    inline const std::string& GetName() const { return m_name; }
+    inline const unsigned int GetID() const { return m_id; }
   };
 }
