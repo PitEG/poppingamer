@@ -35,7 +35,6 @@ namespace pg {
 
   public:
     ObjectPooler();
-    ObjectPooler(const ObjectPooler& op);
     bool AddPool(
         const std::vector<Entity>& entities, 
         const std::string& identifier); 

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <filesystem>
 
 using std::cout;
 using std::endl;
@@ -17,7 +18,10 @@ struct Health {
   unsigned int max = 10;
 };
 
-int main() {
+int main(int argc, const char* argv[]) {
+  //file pat
+  std::cout << std::filesystem::canonical("/proc/self/exe") << std::endl;
+
   pg::ComponentManager<Position> positions;
   pg::ComponentManager<Health> healths;
   pg::ComponentManager<pg::Sprite> sprites;
@@ -29,17 +33,18 @@ int main() {
   Position p1(1.f, 1.f);
   Position p2(2.f, 2.f);
 
+  /*
   cout << "creating p0: " << positions.Create(e0) << endl;
   cout << "creating p1: " << positions.Create(e1, p1) << endl;
   cout << "creating p2: " << positions.Create(e2, p2) << endl;
   cout << "creating p2 (again): " << positions.Create(e2, p2) << endl;
+  */
 
   auto pos_components = positions.GetComponents();
-  cout << "components: " << pos_components.size() << endl;
+  //cout << "components: " << pos_components.size() << endl;
   for (int i = 0; i < pos_components.size(); i++) {
     auto& c = pos_components[i];
     unsigned int eId = c.entityId;
-    cout << "entity (id) " << eId << " = x: " << pos_components[i].component.x << ", y: " << pos_components[i].component.y << endl;
   }
 
   //disable a component
@@ -55,7 +60,6 @@ int main() {
       c.component.x += 1;
 
       unsigned int eId = c.entityId;
-      cout << "entity (id) " << eId << " = x: " << pos_components[i].component.x << ", y: " << pos_components[i].component.y << endl;
     }
   }
 

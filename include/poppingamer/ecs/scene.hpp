@@ -9,7 +9,7 @@
 
 namespace pg {
   class Scene {
-  private:
+  protected:
     std::string           m_name = "scene";
     std::vector<Entity>   m_entities;
     ObjectPooler          m_objectPooler;
@@ -19,18 +19,19 @@ namespace pg {
 
   public:
     Scene() {}
-    virtual ~Scene();
+    virtual ~Scene() {}
 
-    unsigned int CreateEntity();
+    unsigned int CreateEntity(std::string name);
+    bool PoolEntity(Entity& entity, std::vector<Entity>& entities);
     //this probably should be declared in derived scenes
     template<typename T>
-    void AddComponent(unsigned int entity, T t);
+    void AddComponent(unsigned int entity, T t) {}
 
     virtual bool Disable(unsigned int entity) = 0;
     virtual bool Disable(Entity& entity) = 0;
 
-    inline const std::vector<Entity>& GetEntities() const { return m_entities; }
-    inline const ObjectPooler& GetObjectPooler() const { return m_objectPooler; }
+    inline std::vector<Entity>& GetEntities() { return m_entities; }
+    inline ObjectPooler& GetObjectPooler() { return m_objectPooler; }
   };
 
   /*

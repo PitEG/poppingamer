@@ -6,13 +6,8 @@
 
 namespace pg {
   struct Camera {
-    sf::View            m_view;
-    unsigned int        m_scale;
+    sf::View      m_view;
+    unsigned int  m_scale;
+    bool          m_active = false;      
   };
-
-  class CamaraSystem {
-  public:
-    static void MoveCamera(ComponentManager<Camera> cameras);
-  };
-
 }

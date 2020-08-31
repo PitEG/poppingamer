@@ -12,8 +12,7 @@
 #include "poppingamer/renderer/sprite.hpp"
 #include "poppingamer/renderer/renderer.hpp"
 
-//app
-//#include "poppingamer/application.hpp"
+#include "poppingamer/application.hpp"
 
 namespace pg {
 
