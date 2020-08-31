@@ -71,7 +71,7 @@ namespace pg {
       rt->display();
       //draw onto window
       sf::Sprite framebuffer(rt->getTexture());
-      unsigned int scale = camera.m_scale;
+      unsigned int scale = 1; //TODO temporary
       framebuffer.setScale(scale, scale);
       m_window->draw(framebuffer);
     }//end camera

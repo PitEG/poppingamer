@@ -6,8 +6,7 @@
 
 namespace pg {
   struct Camera {
-    sf::View      m_view;
-    unsigned int  m_scale;
-    bool          m_active = false;      
+    sf::View      view;
+    bool          active = false;      
   };
 }

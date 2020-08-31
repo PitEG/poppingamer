@@ -73,8 +73,8 @@ namespace pg {
      * Get component of specified entity (via id). Will have 
      * unexpected behavior if component doesn't exist
      */
-    T& GetComponent(unsigned int e) {
-      return m_e2cMap[e];
+    Component& GetComponent(unsigned int e) {
+      return m_components[m_e2cMap[e]];
     }
 
     /*

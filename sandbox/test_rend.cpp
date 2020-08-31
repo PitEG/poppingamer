@@ -35,7 +35,7 @@ struct Rectangle : pg::Renderable {
     t.translate(3,4); //debug
     sf::RenderStates renderState(t); 
     
-    rt->setView(camera.m_view);
+    rt->setView(camera.view);
     rt->draw(rs, renderState);
   }
 };
@@ -73,6 +73,23 @@ public:
     }
   }
 
+  void SystemCameras() {
+    auto& cameraComponents = c_cameras.GetComponents();
+    auto& transformComponents = c_transforms.GetComponents();
+    for (int i = 0; i < cameraComponents.size(); i++) {
+      auto& cameraComponent = cameraComponents[i];
+      unsigned int entity = cameraComponent.entityId;
+      //check if camera has a transform, skip if not
+      if (!c_transforms.Contains(entity)) {
+        continue;
+      }
+      auto& transformComponent = c_transforms.GetComponent(entity);
+      Transform& transform = transformComponent.component;
+      pg::Camera& camera = cameraComponent.component;
+      camera.view.setCenter(transform.x, transform.y);
+    }
+  }
+
   //cameras: out var
   void GetCameras(pg::Camera cameras[10]) {
     auto& cameraComponents = c_cameras.GetComponents();
@@ -80,6 +97,8 @@ public:
       cameras[i] = cameraComponents[i].component;
     }
   }
+
+
 };
 
 template<>
@@ -146,6 +165,7 @@ public:
       //game logic
       RendScene rscene_copy = m_rscene;
       m_rscene.SystemTransformWobble();
+      m_rscene.SystemCameras();
 
       //render
       m_rscene.GetCameras(cameras);
