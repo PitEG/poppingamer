@@ -24,7 +24,7 @@ int main(int argc, const char* argv[]) {
 
   pg::ComponentManager<Position> positions;
   pg::ComponentManager<Health> healths;
-  pg::ComponentManager<pg::Sprite> sprites;
+  //pg::ComponentManager<pg::Sprite> sprites;
 
   pg::Entity e0(0, "entity 0");
   pg::Entity e1(1, "entity 1");

@@ -6,25 +6,26 @@
 #include "poppingamer/ecs/entity.hpp"
 
 namespace pg {
+  //TODO move to another hpp file
+  template<typename T>
+  struct Component {
+    T             component; //the actual component
+    unsigned int  entityId;  //the entity associated with this
+    bool          active;    //if the entity is active
+
+    Component(T c, unsigned int entityId, bool active) 
+      : component(c), entityId(entityId), active(active) {
+      }
+  };
+
   template<typename T>
   class ComponentManager {
-  public:
-    struct Component {
-      T component; //the actual component
-      unsigned int entityId;
-      bool active;
-
-      Component(T c, unsigned int entityId, bool active) 
-        : component(c), entityId(entityId), active(active) {
-      }
-    };
-
   private:
     typedef std::unordered_map<unsigned int, unsigned int> e_to_c;
 
-    e_to_c                  m_e2cMap; //maps entity id to component
-    std::vector<unsigned int>  m_entities;
-    std::vector<Component>  m_components;
+    e_to_c                     m_e2cMap; //maps entity id to component idx (in m_components)
+    std::vector<unsigned int>  m_entities; //list of entities
+    std::vector<Component<T>>  m_components; //list of components
 
   public:
     /*
@@ -35,7 +36,7 @@ namespace pg {
     /*
      * Get reference to the list of Components
      */
-    inline std::vector<Component>& GetComponents() { return m_components; }
+    inline std::vector<Component<T>>& GetComponents() { return m_components; }
 
     /*
      * Add a component type associated with e. Only one component per
@@ -60,6 +61,9 @@ namespace pg {
     /*
      * Check if entity contains this kind component
      */
+    inline bool Contains(const Entity& e) {
+      return Contains(e.GetID());
+    }
     bool Contains(unsigned int e) {
       auto itr = m_e2cMap.find(e);
       if (itr == m_e2cMap.end()) {
@@ -70,15 +74,16 @@ namespace pg {
     }
 
     /*
-     * Get component of specified entity (via id). Will have 
-     * unexpected behavior if component doesn't exist
+     * Get reference to component of specified entity (via entity id). 
+     * Will have unexpected behavior if component doesn't exist; should
+     * check if it exists (with Contains()) first.
      */
-    Component& GetComponent(unsigned int e) {
+    Component<T>& GetComponent(unsigned int e) {
       return m_components[m_e2cMap[e]];
     }
 
     /*
-     * Looks up component (via entity) and enable/disables the component
+     * Looks up component (via entity id) and enable/disables the component
      */
     bool SetActive(unsigned int e, bool active) {
       if (!Contains(e)) {
