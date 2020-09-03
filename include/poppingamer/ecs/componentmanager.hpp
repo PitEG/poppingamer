@@ -4,20 +4,9 @@
 #include <unordered_map>
 
 #include "poppingamer/ecs/entity.hpp"
+#include "poppingamer/ecs/component.hpp"
 
 namespace pg {
-  //TODO move to another hpp file
-  template<typename T>
-  struct Component {
-    T             component; //the actual component
-    unsigned int  entityId;  //the entity associated with this
-    bool          active;    //if the entity is active
-
-    Component(T c, unsigned int entityId, bool active) 
-      : component(c), entityId(entityId), active(active) {
-      }
-  };
-
   template<typename T>
   class ComponentManager {
   private:
@@ -37,6 +26,24 @@ namespace pg {
      * Get reference to the list of Components
      */
     inline std::vector<Component<T>>& GetComponents() { return m_components; }
+
+    /*
+     * Get a list of pointers to active components
+     * Just copies the components into a new vector
+     */
+    inline std::vector<Component<T>*> GetActiveComponents() {
+      std::vector<Component<T>*> activeComponents; 
+      Component<T>* components = m_components.data();
+      for (int i = 0; i < m_components.size(); i++) {
+        if (m_components[i].active) {
+          activeComponents.push_back(components + i);
+        }
+      }
+
+      return activeComponents;
+    }
+
+    inline int Size() const { return m_components.size(); }
 
     /*
      * Add a component type associated with e. Only one component per

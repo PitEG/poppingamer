@@ -28,15 +28,14 @@ struct Collider {
 struct Rectangle : pg::Renderable {
   sf::RectangleShape rs;
 
-  Rectangle() {}
+  Rectangle() 
+    : pg::Renderable(1, true) {
+      rs.setFillColor(sf::Color::White);
+  }
 
   virtual void Draw(pg::Camera& camera, sf::RenderTexture* rt) override {
-    sf::Transform t;
-    t.translate(3,4); //debug
-    sf::RenderStates renderState(t); 
-    
     rt->setView(camera.view);
-    rt->draw(rs, renderState);
+    rt->draw(rs);
   }
 };
 
@@ -98,6 +97,16 @@ public:
     }
   }
 
+  std::vector<pg::Renderable*> GetRenderables() {
+    auto& rectangleComponents = c_rectangles.GetComponents();
+    pg::Component<Rectangle>* rectangles = 
+      rectangleComponents.data();
+    std::vector<pg::Renderable*> renderables;
+    for (int i = 0; i < rectangleComponents.size(); i++) {
+      renderables.push_back(&(rectangles[i].component));
+    }
+    return renderables;
+  }
 
 };
 
@@ -165,11 +174,14 @@ public:
       //game logic
       RendScene rscene_copy = m_rscene;
       m_rscene.SystemTransformWobble();
-      m_rscene.SystemCameras();
+      //m_rscene.SystemCameras();
 
       //render
       m_rscene.GetCameras(cameras);
       m_renderer->PushCameras(cameras, m_renderTextures);
+      std::vector<pg::Renderable*> renderables = m_rscene.GetRenderables();
+      m_renderer->PushRenderables(renderables);
+      m_renderer->Draw();
 
       //swap framebuffer
       m_window->display();

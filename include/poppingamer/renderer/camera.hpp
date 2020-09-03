@@ -7,6 +7,6 @@
 namespace pg {
   struct Camera {
     sf::View      view;
-    bool          active = false;      
+    bool          active = true;      
   };
 }

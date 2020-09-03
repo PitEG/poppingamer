@@ -16,7 +16,8 @@ namespace pg {
     //aggregate
     sf::RenderWindow*         m_window; 
     //composite
-    std::vector<Renderable>   m_layers[MAX_LAYERS];
+    std::vector<Renderable*>  m_layers[MAX_LAYERS];
+    unsigned int              m_layerVacantIdx[MAX_LAYERS];
     //cameras
     Camera                    m_cameras[MAX_CAMERAS];
     sf::RenderTexture*        m_renderTextures[MAX_CAMERAS];
@@ -29,6 +30,7 @@ namespace pg {
      * Get a list of renderables and sort them into the layers
      */
     void PushRenderables(const std::vector<Renderable>& renderables);
+    void PushRenderables(const std::vector<Renderable*>& renderables);
     /*
      * push cameras 
      */

@@ -2,12 +2,8 @@
 
 #include <iostream>
 
-/*
- * CURRENTLY A BUG WHEN INCREASING CAPACITY OF LAYERS. A COUPLE ELEMENTS
- * WILL JUST NOT BE DRAWN FOR SOME REASON IDK MAN.
- */
-namespace pg {
 
+namespace pg {
   /*
    * CONSTRUCTOR
    */
@@ -29,15 +25,22 @@ namespace pg {
     }
   }
   
-  void Renderer::PushRenderables(const std::vector<Renderable>& renderables) {
+  void Renderer::PushRenderables(const std::vector<Renderable*>& renderables) {
     for (int i = 0; i < renderables.size(); i++) {
       //get layer
-      unsigned int layer = renderables[i].GetLayer();
+      unsigned int layer = renderables[i]->GetLayer();
       if (layer >= MAX_LAYERS) { continue; } //skip if out of bounds
-      //add to layer
-      std::vector<Renderable>& renderListLayer = m_layers[layer];
       //add to layer renderable list
-      renderListLayer.push_back(renderables[i]);
+      std::vector<Renderable*>& renderListLayer = m_layers[layer];
+      unsigned int layerVacantIdx = m_layerVacantIdx[layer];
+      if (renderListLayer.size() <= layerVacantIdx) {
+        renderListLayer.push_back(renderables[i]);
+      }
+      else {
+        renderListLayer[layerVacantIdx] = renderables[i];
+      }
+      //update vacant idx
+      m_layerVacantIdx[layer] += 1;
     }
   }
 
@@ -54,26 +57,22 @@ namespace pg {
       m_renderTextures[c]->clear(sf::Color(0,0,0,0)); //clear a transparent color
       //FOR EACH LAYER
       for (int l = 0; l < MAX_LAYERS; l++) {
-        std::vector<Renderable>& layer = m_layers[l];
+        std::vector<Renderable*>& layer = m_layers[l];
         //FOR EACH RENDERABLE
         for (int r = 0; r < layer.size(); r++) {
-          Renderable& renderable = layer[r];
+          Renderable* renderable = layer[r];
           //if renderable is null, don't render
-          if (renderable.m_shouldRender == false) { continue; }
+          if (renderable->m_shouldRender == false) { continue; }
           //if renderable is not within the layer range,  don't render
-          if (renderable.GetLayer() >= MAX_LAYERS) {
+          if (renderable->GetLayer() >= MAX_LAYERS) {
             continue;
           }
-          renderable.Draw(camera, rt);
+          renderable->Draw(camera, rt);
         }//end renderable
       }//end layer
-      //draw onto rendertexture
-      rt->display();
-      //draw onto window
+      rt->display(); //draw onto rendertexture
       sf::Sprite framebuffer(rt->getTexture());
-      unsigned int scale = 1; //TODO temporary
-      framebuffer.setScale(scale, scale);
-      m_window->draw(framebuffer);
+      m_window->draw(framebuffer); //draw onto window
     }//end camera
     ClearRenderables();
     m_window->display();
@@ -82,10 +81,11 @@ namespace pg {
   void Renderer::ClearRenderables() {
     //for each layer
     for (int i = 0; i < MAX_LAYERS; i++) {
-      std::vector<Renderable>& layer = m_layers[i];
+      std::vector<Renderable*> layer = m_layers[i];
+      m_layerVacantIdx[i] = 0;
       //for each element
       for (int j = 0; j < layer.size(); j++) {
-        layer[i].m_shouldRender == false;
+        layer[i] = NULL;
       }
     }
   }
