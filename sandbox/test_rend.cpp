@@ -31,9 +31,11 @@ struct Rectangle : pg::Renderable {
   Rectangle() 
     : pg::Renderable(1, true) {
       rs.setFillColor(sf::Color::White);
+      rs.setSize(sf::Vector2f(10,10));
   }
 
   virtual void Draw(pg::Camera& camera, sf::RenderTexture* rt) override {
+    rs.setPosition(0,0);
     rt->setView(camera.view);
     rt->draw(rs);
   }
@@ -173,7 +175,7 @@ public:
 
       //game logic
       RendScene rscene_copy = m_rscene;
-      m_rscene.SystemTransformWobble();
+      //m_rscene.SystemTransformWobble();
       //m_rscene.SystemCameras();
 
       //render
