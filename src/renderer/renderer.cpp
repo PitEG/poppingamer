@@ -53,6 +53,8 @@ namespace pg {
     for (int c = 0; c < MAX_CAMERAS; c++) {
       //skip camera if it doesn't have a framebuffer to draw to
       Camera camera = m_cameras[c];
+      //skip if disabled
+      if (camera.enabled == false) { continue; }
       sf::RenderTexture* rt = m_renderTextures[c];
       m_renderTextures[c]->clear(sf::Color(0,0,0,0)); //clear a transparent color
       //FOR EACH LAYER

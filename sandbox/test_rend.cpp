@@ -39,6 +39,7 @@ struct Rectangle : pg::Renderable {
     rt->setView(camera.view);
     rt->draw(rs);
   }
+
 };
 
 //
@@ -150,15 +151,21 @@ public:
   virtual void Start() override {
     auto e0 = m_rscene.CreateEntity("entity 0");
     auto e1 = m_rscene.CreateEntity("entity 1");
+    auto e2 = m_rscene.CreateEntity("camera 0");
 
     Transform t0(1,1);
-    Transform t1(1,-2);
+    Transform t1(1,2);
     Rectangle r0;
     Rectangle r1;
+    pg::Camera c0;
+    c0.enabled = true;
     m_rscene.AddComponent<Transform>(e0, t0);
     m_rscene.AddComponent<Transform>(e1, t1);
     m_rscene.AddComponent<Rectangle>(e0, r0);
     m_rscene.AddComponent<Rectangle>(e1, r1);
+
+    m_rscene.AddComponent<pg::Camera>(e2, c0);
+    m_rscene.AddComponent<Transform>(e2, t0);
   }
 
   virtual void Run() override {
@@ -176,7 +183,7 @@ public:
       //game logic
       RendScene rscene_copy = m_rscene;
       //m_rscene.SystemTransformWobble();
-      //m_rscene.SystemCameras();
+      m_rscene.SystemCameras();
 
       //render
       m_rscene.GetCameras(cameras);
