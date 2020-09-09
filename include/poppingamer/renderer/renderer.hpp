@@ -19,8 +19,10 @@ namespace pg {
     std::vector<Renderable*>  m_layers[MAX_LAYERS];
     unsigned int              m_layerVacantIdx[MAX_LAYERS];
     //cameras
-    Camera                    m_cameras[MAX_CAMERAS];
-    sf::RenderTexture*        m_renderTextures[MAX_CAMERAS];
+    //Camera                    m_cameras[MAX_CAMERAS];
+    //sf::RenderTexture*        m_renderTextures[MAX_CAMERAS];
+    std::vector<Camera>             m_cameras;
+    std::vector<sf::RenderTexture*> m_renderTextures;
 
   public:
     Renderer(sf::RenderWindow* window);
@@ -34,7 +36,8 @@ namespace pg {
     /*
      * push cameras 
      */
-    void PushCameras(Camera cameras[MAX_CAMERAS], sf::RenderTexture* rt[MAX_CAMERAS]);
+    //void PushCameras(Camera cameras[MAX_CAMERAS], sf::RenderTexture* rt[MAX_CAMERAS]);
+    void PushCameras(std::vector<Camera>& cameras, std::vector<sf::RenderTexture*> rts);
     /*
      * Draw everything in m_layers in order from 0 to 31 
      * (higher numbers are drawn on top) from the cameras' perspectives

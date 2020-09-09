@@ -8,7 +8,6 @@ namespace pg {
     sf::Sprite m_sprite;
 
   public:
-    SpriteRenderer();
     SpriteRenderer(sf::Sprite sprite, unsigned int layer = 0);
 
     void ChangeSprite(const sf::Sprite sprite);

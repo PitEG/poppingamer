@@ -14,6 +14,7 @@ namespace pg {
   Renderer::~Renderer() {
   }
 
+  /*
   void Renderer::PushCameras(Camera cameras[MAX_CAMERAS], 
       sf::RenderTexture* rt[MAX_CAMERAS]) {
 
@@ -23,6 +24,13 @@ namespace pg {
     for (int i = 0; i < MAX_CAMERAS; i++) {
       m_renderTextures[i] = rt[i];
     }
+  }
+  */
+
+  void Renderer::PushCameras(std::vector<Camera>& cameras, std::vector<sf::RenderTexture*> rts) {
+    //just copies vector
+    m_cameras = cameras;
+    m_renderTextures = rts;
   }
   
   void Renderer::PushRenderables(const std::vector<Renderable*>& renderables) {
@@ -50,11 +58,8 @@ namespace pg {
   void Renderer::Draw() {
     m_window->clear(sf::Color(0,0,0,255));
     //FOR EACH CAMERA
-    for (int c = 0; c < MAX_CAMERAS; c++) {
-      //skip camera if it doesn't have a framebuffer to draw to
-      Camera camera = m_cameras[c];
-      //skip if disabled
-      if (camera.enabled == false) { continue; }
+    for (int c = 0; c < m_cameras.size(); c++) {
+      Camera camera = m_cameras[c]; 
       sf::RenderTexture* rt = m_renderTextures[c];
       m_renderTextures[c]->clear(sf::Color(0,0,0,0)); //clear a transparent color
       //FOR EACH LAYER
@@ -74,6 +79,7 @@ namespace pg {
       }//end layer
       rt->display(); //draw onto rendertexture
       sf::Sprite framebuffer(rt->getTexture());
+      //framebuffer.setScale(scale, scale);
       m_window->draw(framebuffer); //draw onto window
     }//end camera
     ClearRenderables();

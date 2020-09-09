@@ -62,6 +62,8 @@ namespace pg {
       unsigned int idx = m_components.size();
       m_components.push_back(c);
       m_e2cMap[e] = idx;
+      //push entity to entity list
+      m_entities.push_back(e);
       return true;
     }
 

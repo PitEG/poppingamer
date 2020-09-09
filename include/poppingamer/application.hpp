@@ -8,6 +8,7 @@ namespace pg {
   protected:
     //window
     sf::RenderWindow* m_window;
+    //TODO deprecated these two please
     int               m_width;
     int               m_height;
 

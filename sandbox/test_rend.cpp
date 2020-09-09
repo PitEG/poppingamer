@@ -29,13 +29,12 @@ struct Rectangle : pg::Renderable {
   sf::RectangleShape rs;
 
   Rectangle() 
-    : pg::Renderable(1, true) {
-      rs.setFillColor(sf::Color::White);
-      rs.setSize(sf::Vector2f(10,10));
+  : pg::Renderable(1, true) {
+    rs.setFillColor(sf::Color::White);
+    rs.setSize(sf::Vector2f(1,1));
   }
 
   virtual void Draw(pg::Camera& camera, sf::RenderTexture* rt) override {
-    rs.setPosition(0,0);
     rt->setView(camera.view);
     rt->draw(rs);
   }
@@ -67,11 +66,22 @@ public:
     return false; 
   }
 
+  //Systems
   void SystemTransformWobble() {
     auto& transforms = c_transforms.GetComponents();
     for (int i = 0; i < transforms.size(); i++) {
       transforms[i].component.x = -transforms[i].component.x;
       transforms[i].component.y = -transforms[i].component.y;
+    }
+  }
+
+  void SystemRectangles() {
+    auto& transforms = c_transforms.GetComponents();
+    auto& rectangles = c_rectangles.GetComponents();
+    for (int i = 0; i < rectangles.size(); i++) {
+      float x = transforms[i].component.x;
+      float y = transforms[i].component.y;
+      rectangles[i].component.rs.setPosition(x, y);
     }
   }
 
@@ -92,12 +102,32 @@ public:
     }
   }
 
+  void SystemMove(sf::Vector2f displacement) {
+    auto& transformComponents = c_transforms.GetComponents();
+    for (int i = 0; i < transformComponents.size(); i++) {
+      if (!transformComponents[i].active) { continue; }
+      if (c_cameras.Contains(transformComponents[i].entityId)) { continue; }
+      Transform& transform = transformComponents[i].component;
+      transform.Translate(displacement.x, displacement.y);
+    }
+  }
+
   //cameras: out var
   void GetCameras(pg::Camera cameras[10]) {
     auto& cameraComponents = c_cameras.GetComponents();
     for (int i = 0; i < cameraComponents.size(); i++) {
       cameras[i] = cameraComponents[i].component;
     }
+  }
+
+  std::vector<pg::Camera> GetCams() {
+    auto& cameraComponents = c_cameras.GetComponents();
+    std::vector<pg::Camera> cameras;
+    for (int i = 0; i < cameraComponents.size(); i++) {
+      if (!cameraComponents[i].active) { continue; }
+      cameras.push_back(cameraComponents[i].component);
+    }
+    return cameras;
   }
 
   std::vector<pg::Renderable*> GetRenderables() {
@@ -135,15 +165,16 @@ void RendScene::AddComponent<Rectangle>(unsigned int entity, Rectangle t) {
 class App : public pg::Application {
 private:
   RendScene          m_rscene;
-  sf::RenderTexture* m_renderTextures[10];
+  std::vector<sf::RenderTexture*> m_renderTextures;
 
 public:
   App(int width, int height, std::string name) 
   : pg::Application(width, height, name) {
 
+    //this is an arbitrary number :P
     for(int i = 0; i < 10; i++ ) {
-      m_renderTextures[i] = new sf::RenderTexture();
-      m_renderTextures[i]->create(width, height);
+      m_renderTextures.push_back(new sf::RenderTexture());
+      m_renderTextures[i]->create(width / 2, height / 2);
     }
 
   }
@@ -154,11 +185,10 @@ public:
     auto e2 = m_rscene.CreateEntity("camera 0");
 
     Transform t0(1,1);
-    Transform t1(1,2);
+    Transform t1(1,-30);
     Rectangle r0;
     Rectangle r1;
-    pg::Camera c0;
-    c0.enabled = true;
+    pg::Camera c0(sf::Vector2f(0,0), sf::Vector2f(m_width / (float)9, m_height / (float)9));
     m_rscene.AddComponent<Transform>(e0, t0);
     m_rscene.AddComponent<Transform>(e1, t1);
     m_rscene.AddComponent<Rectangle>(e0, r0);
@@ -173,20 +203,35 @@ public:
     sf::Int64 fps = 60;
     sf::Int64 frameTime = 1 * 1'000'000 / fps;
     sf::Time sframeTime = sf::microseconds(frameTime);
-    pg::Camera cameras[10];
     while(m_window->isOpen()) {
       //input
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         m_window->close();;
+      }
+      sf::Vector2f displacement;
+      float speed = 0.1f;
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        displacement += sf::Vector2f(0,-speed);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        displacement += sf::Vector2f(0,speed);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        displacement += sf::Vector2f(-speed,0);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        displacement += sf::Vector2f(speed,0);
       }
 
       //game logic
       RendScene rscene_copy = m_rscene;
       //m_rscene.SystemTransformWobble();
       m_rscene.SystemCameras();
+      m_rscene.SystemRectangles();
+      m_rscene.SystemMove(displacement);
 
       //render
-      m_rscene.GetCameras(cameras);
+      std::vector<pg::Camera> cameras = m_rscene.GetCams();
       m_renderer->PushCameras(cameras, m_renderTextures);
       std::vector<pg::Renderable*> renderables = m_rscene.GetRenderables();
       m_renderer->PushRenderables(renderables);
@@ -195,7 +240,7 @@ public:
       //swap framebuffer
       m_window->display();
 
-      //might be inaccurate
+      //might be inaccurate. lowering the framerate by like 2-3 frames
       sf::Time time = clock.getElapsedTime();
       sf::sleep(sframeTime);
     }
@@ -206,7 +251,7 @@ public:
 };
 
 int main() {
-  App app(480, 270, "test_rend");
+  App app(480 * 2, 270 * 2, "test_rend");
   app.Start();
   app.Run();
   app.Stop();
