@@ -25,7 +25,7 @@ struct Collider {
   Collider() : box(sf::Rect<float>()) {}
 };
 
-struct Rectangle : pg::Renderable {
+struct Rectangle : public pg::Renderable {
   sf::RectangleShape rs;
 
   Rectangle() 
@@ -50,6 +50,7 @@ private:
   pg::ComponentManager<Collider> c_colliders;
   pg::ComponentManager<pg::Camera> c_cameras;
   pg::ComponentManager<Rectangle> c_rectangles;
+  pg::ComponentManager<pg::SpriteRenderer> c_spriteRenderer;
 
 public:
   RendScene() {}
@@ -132,11 +133,19 @@ public:
 
   std::vector<pg::Renderable*> GetRenderables() {
     auto& rectangleComponents = c_rectangles.GetComponents();
+    auto& spritesComponents = c_spriteRenderer.GetComponents();
+    std::vector<pg::Renderable*> renderables;
+    //rectangles
     pg::Component<Rectangle>* rectangles = 
       rectangleComponents.data();
-    std::vector<pg::Renderable*> renderables;
     for (int i = 0; i < rectangleComponents.size(); i++) {
       renderables.push_back(&(rectangles[i].component));
+    }
+    //sprites
+    pg::Component<pg::SpriteRenderer>* sprites = 
+      spritesComponents.data();
+    for (int i = 0; i < rectangleComponents.size(); i++) {
+      renderables.push_back(&(sprites[i].component));
     }
     return renderables;
   }
@@ -162,10 +171,16 @@ void RendScene::AddComponent<Rectangle>(unsigned int entity, Rectangle t) {
   c_rectangles.Create(entity, t);
 }
 
+template<>
+void RendScene::AddComponent<pg::SpriteRenderer>(unsigned int entity, pg::SpriteRenderer sr) {
+  c_spriteRenderer.Create(entity, sr);
+}
+
 class App : public pg::Application {
 private:
   RendScene          m_rscene;
   std::vector<sf::RenderTexture*> m_renderTextures;
+  pg::SpriteLibrary  m_spriteLibrary;
 
 public:
   App(int width, int height, std::string name) 
@@ -180,15 +195,24 @@ public:
   }
 
   virtual void Start() override {
+    //sprite library
+    m_spriteLibrary.AddSprite("sybil", "sybilsprite.png");
+
     auto e0 = m_rscene.CreateEntity("entity 0");
     auto e1 = m_rscene.CreateEntity("entity 1");
     auto e2 = m_rscene.CreateEntity("camera 0");
+    auto e3 = m_rscene.CreateEntity("entity 3");
 
     Transform t0(1,1);
-    Transform t1(1,-30);
+    Transform t1(1,-10);
+    Transform t2(1,10);
     Rectangle r0;
     Rectangle r1;
-    pg::Camera c0(sf::Vector2f(0,0), sf::Vector2f(m_width / (float)9, m_height / (float)9));
+    pg::Camera c0(sf::Vector2f(0,0), sf::Vector2f(m_width / 2, m_height / 2));
+    sf::Sprite sybilSprite; 
+    m_spriteLibrary.Get("sybil", sybilSprite);
+    pg::SpriteRenderer sprite(sybilSprite, 30);
+
     m_rscene.AddComponent<Transform>(e0, t0);
     m_rscene.AddComponent<Transform>(e1, t1);
     m_rscene.AddComponent<Rectangle>(e0, r0);
@@ -196,6 +220,8 @@ public:
 
     m_rscene.AddComponent<pg::Camera>(e2, c0);
     m_rscene.AddComponent<Transform>(e2, t0);
+
+    m_rscene.AddComponent<pg::SpriteRenderer>(e3,sprite);
   }
 
   virtual void Run() override {
@@ -224,8 +250,8 @@ public:
       }
 
       //game logic
-      RendScene rscene_copy = m_rscene;
-      //m_rscene.SystemTransformWobble();
+      //copy scene //TODO causes a segfault?
+      //RendScene rscene_copy = m_rscene;
       m_rscene.SystemCameras();
       m_rscene.SystemRectangles();
       m_rscene.SystemMove(displacement);
@@ -251,7 +277,7 @@ public:
 };
 
 int main() {
-  App app(480 * 2, 270 * 2, "test_rend");
+  App app(480, 270, "test_rend");
   app.Start();
   app.Run();
   app.Stop();

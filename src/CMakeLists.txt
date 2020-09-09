@@ -1,6 +1,7 @@
 set(RNDR renderer)
 set(RNDR_SRC
     ${RNDR}/renderer.cpp
+    ${RNDR}/spriterenderer.cpp
    )
 
 set(ECS_SRC
@@ -10,6 +11,7 @@ set(ECS_SRC
 
 set(SRC
     poppingamer.cpp
+    spritelibrary.cpp
     ${RNDR_SRC}
     ${ECS_SRC}
    )

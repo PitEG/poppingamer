@@ -3,3 +3,7 @@ SFML based game engine for prototyping. Performance is not a priority but iterat
 
 Implementing an ECS system similar to: https://wickedengine.net/2019/09/29/entity-component-system/
 Implementation in this engine is simpler, doesn't use entity heirarchies, and uses a dedicated object pooler
+
+# TODO
+debug memory problems
+created common components like transform, shapes, and stuff

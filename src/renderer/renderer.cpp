@@ -14,19 +14,6 @@ namespace pg {
   Renderer::~Renderer() {
   }
 
-  /*
-  void Renderer::PushCameras(Camera cameras[MAX_CAMERAS], 
-      sf::RenderTexture* rt[MAX_CAMERAS]) {
-
-    for (int i = 0; i < MAX_CAMERAS; i++) {
-      m_cameras[i] = cameras[i];
-    }
-    for (int i = 0; i < MAX_CAMERAS; i++) {
-      m_renderTextures[i] = rt[i];
-    }
-  }
-  */
-
   void Renderer::PushCameras(std::vector<Camera>& cameras, std::vector<sf::RenderTexture*> rts) {
     //just copies vector
     m_cameras = cameras;
@@ -79,7 +66,8 @@ namespace pg {
       }//end layer
       rt->display(); //draw onto rendertexture
       sf::Sprite framebuffer(rt->getTexture());
-      //framebuffer.setScale(scale, scale);
+      unsigned int scale = 2;
+      framebuffer.setScale(scale, scale);
       m_window->draw(framebuffer); //draw onto window
     }//end camera
     ClearRenderables();
