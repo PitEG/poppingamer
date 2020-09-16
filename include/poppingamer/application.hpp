@@ -8,17 +8,13 @@ namespace pg {
   protected:
     //window
     sf::RenderWindow* m_window;
-    //TODO deprecated these two please
-    int               m_width;
-    int               m_height;
 
     //renderer
     Renderer*         m_renderer;
  
   public:
     //set a fixed size window
-    Application(int width, int height, std::string name)
-    : m_width(width), m_height(height) {
+    Application(int width, int height, std::string name) {
       sf::Uint32 windowStyle = sf::Style::Titlebar | sf::Style::Close; 
 
       m_window = new sf::RenderWindow(sf::VideoMode(width, height), name, windowStyle); 
@@ -26,10 +22,9 @@ namespace pg {
     }
 
     virtual ~Application() {
+      delete m_window;
       delete m_renderer;
     }
-
-    virtual void WindowResize() {}; 
 
     virtual void Start() {}
     virtual void Run() {}   

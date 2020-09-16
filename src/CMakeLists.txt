@@ -9,11 +9,16 @@ set(ECS_SRC
    ecs/objectpooler.cpp
    )
 
+set(DEBUG_SRC
+    debug/logger.cpp
+   )
+
 set(SRC
     poppingamer.cpp
     spritelibrary.cpp
     ${RNDR_SRC}
     ${ECS_SRC}
+    ${DEBUG_SRC}
    )
 
 add_library(poppingamer SHARED ${SRC})

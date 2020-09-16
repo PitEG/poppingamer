@@ -6,5 +6,10 @@ namespace pg {
     m_entities.push_back(Entity(idx, name));
     return idx;
   }
+
+  //TODO
+  bool Scene::PoolEntity(Entity& entity, std::vector<Entity>& entities) {
+    return false;
+  }
 }
 

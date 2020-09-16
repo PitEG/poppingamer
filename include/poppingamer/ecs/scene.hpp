@@ -14,7 +14,7 @@ namespace pg {
     std::vector<Entity>   m_entities;
     ObjectPooler          m_objectPooler;
     /*
-     * Inherit and add the component managers
+     * Inherit this class and add the component managers
      */
 
   public:
@@ -27,8 +27,8 @@ namespace pg {
     template<typename T>
     void AddComponent(unsigned int entity, T t) {}
 
-    virtual bool Disable(unsigned int entity) = 0;
-    virtual bool Disable(Entity& entity) = 0;
+    virtual bool Disable(unsigned int entity) { return false; }
+    virtual bool Disable(Entity& entity) { return false; }
 
     inline std::vector<Entity>& GetEntities() { return m_entities; }
     inline ObjectPooler& GetObjectPooler() { return m_objectPooler; }
