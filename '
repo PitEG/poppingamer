@@ -25,61 +25,14 @@ public:
     return cameras;
   }
 
-  //update pipeline
-  void Tick() {
-      sf::Vector2f displacement;
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-        displacement += sf::Vector2f(0,0.05f);
-      }
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-        displacement += sf::Vector2f(-0.05f,0);
-      }
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-        displacement += sf::Vector2f(0,-0.05f);
-      }
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-        displacement += sf::Vector2f(0.05f,0);
-      }
-      SystemMoveSybil(displacement);
-
-      sf::Vector2f cdisplacement;
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-        cdisplacement += sf::Vector2f(0,0.05f);
-      }
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-        cdisplacement += sf::Vector2f(-0.05f,0);
-      }
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-        cdisplacement += sf::Vector2f(0,-0.05f);
-      }
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-        cdisplacement += sf::Vector2f(0.05f,0);
-      }
-      SystemMoveCamera(displacement);
-  }
-
-  void Render() {
-    UpdateSprites();
-    //UpdateCameras();
-  }
-
 
   //systems
   void SystemMoveSybil(const sf::Vector2f& displacement) {
-    //hardcoded number
     c_transforms.GetComponents()[0].component.Translate(displacement);
   }
-  void SystemMoveCamera(const sf::Vector2f& displacement) {
-    //hardcoded number
-    c_transforms.GetComponents()[1].component.Translate(displacement);
-  }
 
-  void UpdateSprites() {
+  void UpdateSpriteRenderer() {
     pg::SpriteRenderer::UpdatePositions(c_sprites, c_transforms);
-  }
-
-  void UpdateCameras() {
-    pg::Camera::UpdatePosition(c_cameras, c_transforms);
   }
 
 public:
@@ -134,7 +87,7 @@ public:
     //create scenes
     pg::Entity sybil;
     pg::Transform sybilTransform;
-    sybilTransform.Translate(20,-30);
+    sybilTransform.Translate(40,-90);
     pg::SpriteRenderer sybilSprite(m_spritelibrary.Get("sybil"), 1);
     sybilSprite.SetScale(1);
     scene_titlemenu.AddComponent<pg::Transform>(sybil.GetID(), sybilTransform);
@@ -145,8 +98,8 @@ public:
     sf::Vector2u cameraSize = m_window->getSize();
     pg::Camera cameraCamera(
         sf::Vector2f(0,0), sf::Vector2f(cameraSize.x, cameraSize.y));
-    scene_titlemenu.AddComponent<pg::Transform>(camera.GetID(), cameraTransform);
     scene_titlemenu.AddComponent<pg::Camera>(camera.GetID(), cameraCamera);
+    scene_titlemenu.AddComponent<pg::Transform>(camera.GetID(), cameraTransform);
 
     //load initial scene
     scene_current = scene_titlemenu;
@@ -167,8 +120,25 @@ public:
       if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
         m_window->close();
       }
-      scene_current.Tick();
-      scene_current.Render();
+
+      sf::Vector2f displacement;
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+        displacement += sf::Vector2f(0,1);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+        displacement += sf::Vector2f(-1,0);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+        displacement += sf::Vector2f(0,-1);
+      }
+      if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        displacement += sf::Vector2f(1,0);
+      }
+
+      
+      //game logic
+      scene_current.SystemMoveSybil(displacement);
+      scene_current.UpdateSprites(displacement);
 
       //render
       std::vector<pg::Camera> cameras = scene_current.GetCameras();
@@ -184,13 +154,11 @@ public:
 };
 
 int main() {
-  {
   App app;
 
   app.Start();
   app.Run();
   app.Stop();
-  }
 
   return 0;
 }

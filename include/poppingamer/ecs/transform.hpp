@@ -11,17 +11,17 @@ namespace pg {
     float rotation = 0.0f;
 
     inline sf::Vector2f Position() const {
-      sf::Vector2f position(position.x, position.y);
-      return position;
+      sf::Vector2f currPosition(position.x, position.y);
+      return currPosition;
     }
 
     //flipping to fit a more standard coordinate system
     void Translate(float x, float y) {
-      Translate(sf::Vector2(x,-y));
+      Translate(sf::Vector2(x,y));
     }
 
     void Translate(sf::Vector2f vector) {
-      position += vector;
+      position += sf::Vector2(vector.x, -vector.y);
     }
 
     void Rotate(float degree) {

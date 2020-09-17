@@ -23,12 +23,14 @@ namespace pg {
     ~SpriteRenderer();
 
     void ChangeSprite(const sf::Sprite sprite);
+    inline void SetScale(unsigned int scale) { 
+      m_sprite.setScale(scale, scale); 
+    }
 
     virtual void Draw(Camera& camera, sf::RenderTexture* rt) override;
 
     static void UpdatePositions(
         ComponentManager<SpriteRenderer>& spriteRenderers,
         ComponentManager<Transform>& transforms);
-
   };
 }

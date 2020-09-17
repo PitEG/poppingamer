@@ -66,7 +66,7 @@ namespace pg {
       }//end layer
       rt->display(); //draw onto rendertexture
       sf::Sprite framebuffer(rt->getTexture());
-      unsigned int scale = 2;
+      unsigned int scale = camera.zoom;
       framebuffer.setScale(scale, scale);
       m_window->draw(framebuffer); //draw onto window
     }//end camera

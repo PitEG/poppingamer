@@ -21,8 +21,7 @@ namespace pg {
     sf::Texture* texture = new sf::Texture;
     texture->loadFromFile(filepath);
     sf::Sprite sprite(*texture);
-    AddSprite(name, sprite);
-    return true;
+    return AddSprite(name, sprite);
   }
 
   bool SpriteLibrary::Get(std::string name, sf::Sprite& sprite) {
@@ -31,5 +30,13 @@ namespace pg {
     }
     sprite = m_sprites[name];
     return true;
+  }
+
+  sf::Sprite SpriteLibrary::Get(std::string name) {
+    if (Contains(name)) {
+      return m_sprites[name];
+    }
+    sf::Sprite sprite;
+    return sprite;
   }
 }

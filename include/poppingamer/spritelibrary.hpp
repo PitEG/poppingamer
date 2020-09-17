@@ -19,5 +19,6 @@ namespace pg {
     //get copy of sprite
     //out var: sprite
     bool Get(std::string name, sf::Sprite& sprite);
+    sf::Sprite Get(std::string name);
   };
 }
